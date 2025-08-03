@@ -15,7 +15,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
 
-  // Generate QR code for current URL
+  useEffect(() => {
+    console.log('Firebase Config Check:', {
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Set' : 'Missing',
+      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ? 'Set' : 'Missing',
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? 'Set' : 'Missing',
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ? 'Set' : 'Missing',
+      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ? 'Set' : 'Missing',
+      appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ? 'Set' : 'Missing',
+    });
+    console.log('Network Status:', navigator.onLine ? 'Online' : 'Offline');
+  }, []);
+
   const generateQRCode = async () => {
     try {
       const url = window.location.href;

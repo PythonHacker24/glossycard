@@ -106,7 +106,14 @@ export const getProfileData = async (id: string): Promise<ProfileData | null> =>
       throw new Error('Firebase database is not initialized. Check your environment variables.');
     }
     
+    // Check if we're online
+    if (!navigator.onLine) {
+      throw new Error('No internet connection. Please check your network and try again.');
+    }
+    
     console.log('Attempting to fetch profile data from Firestore...');
+    console.log('Document ID:', id);
+    
     const docRef = doc(db, 'profiles', id);
     const docSnap = await getDoc(docRef);
     
@@ -125,10 +132,14 @@ export const getProfileData = async (id: string): Promise<ProfileData | null> =>
     if (error instanceof Error) {
       if (error.message.includes('permission-denied')) {
         throw new Error('Firebase error: Missing or insufficient permissions. Please check your Firestore security rules.');
-      } else if (error.message.includes('unavailable')) {
-        throw new Error('Firebase error: Service unavailable. Please check your internet connection and Firebase project status.');
+      } else if (error.message.includes('unavailable') || error.message.includes('offline')) {
+        throw new Error('Firebase error: Service unavailable or offline. Please check your internet connection and Firebase project status.');
       } else if (error.message.includes('not-found')) {
         throw new Error('Firebase error: Database not found. Please check your Firebase project configuration.');
+      } else if (error.message.includes('No internet connection')) {
+        throw new Error('No internet connection. Please check your network and try again.');
+      } else if (error.message.includes('Firebase database is not initialized')) {
+        throw new Error('Firebase configuration error. Please check your environment variables.');
       }
     }
     

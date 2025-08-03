@@ -1,108 +1,137 @@
-# Firebase Setup Guide
+# Firebase Setup Guide for Vercel Deployment
 
-## 1. Create a Firebase Project
+## Issue: "Failed to get document because the client is offline"
 
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Click "Add project"
-3. Enter your project name (e.g., "procards")
-4. Follow the setup wizard
+This error typically occurs when Firebase isn't properly configured for the client-side environment in Vercel. Here's how to fix it:
 
-## 2. Enable Services
+## 1. Check Environment Variables in Vercel
 
-### Firestore Database
-1. In Firebase Console, go to "Firestore Database"
-2. Click "Create database"
-3. Choose "Start in test mode" (for development)
-4. Select a location close to your users
+Make sure all these environment variables are set in your Vercel project:
 
-**Note**: We're not using Firebase Storage. Images are stored locally in `/public/uploads/` directory.
-
-## 3. Get Configuration
-
-1. In Firebase Console, go to Project Settings (gear icon)
-2. Scroll down to "Your apps"
-3. Click the web app icon (</>) to add a web app
-4. Register your app with a nickname
-5. Copy the configuration object
-
-## 4. Environment Variables
-
-Create a `.env.local` file in your project root with:
-
-```env
+### Required Environment Variables:
+```
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
-## 5. Security Rules (Optional)
+### How to set them in Vercel:
+1. Go to your Vercel dashboard
+2. Select your project
+3. Go to "Settings" → "Environment Variables"
+4. Add each variable with the exact name above
+5. Make sure they're set for "Production", "Preview", and "Development"
+6. Redeploy your project
+
+## 2. Get Your Firebase Configuration
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Select your project
+3. Click the gear icon (⚙️) next to "Project Overview"
+4. Select "Project settings"
+5. Scroll down to "Your apps" section
+6. If you don't have a web app, click "Add app" and choose "Web"
+7. Copy the configuration object
+
+## 3. Verify Firebase Project Settings
 
 ### Firestore Rules
+Make sure your Firestore security rules allow read access:
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /profiles/{profileId} {
-      allow read, write: if true; // For development - change for production
+    match /profiles/{document} {
+      allow read: if true;  // Allow public read access
+      allow write: if true; // Allow public write access (adjust as needed)
     }
   }
 }
 ```
 
-## 6. Image Upload System
+### Authentication (if needed)
+If you're using authentication, make sure your domain is added to authorized domains in Firebase Console.
 
-Images are uploaded to `/public/uploads/` directory with the following process:
+## 4. Check Network Connectivity
 
-1. User selects an image file
-2. File is sent to `/api/upload` endpoint
-3. Original filename is hashed using MD5 + timestamp
-4. File is saved as `<hash>.<extension>` in `/public/uploads/`
-5. URL `/uploads/<hash>.<extension>` is stored in Firebase
+The error might also occur if:
+- Your Firebase project is in a region that's not accessible
+- There are network restrictions
+- The Firebase project is paused or disabled
 
-Example:
-- Original filename: `profile-photo.jpg`
-- Hashed filename: `a1b2c3d4e5f678901234567890123456.jpg`
-- Stored URL: `/uploads/a1b2c3d4e5f678901234567890123456.jpg`
+## 5. Debug Steps
 
-## 7. Test the Integration
-
-1. Start your development server: `npm run dev`
-2. Fill out the form and upload an image
-3. Check Firebase Console to see the data being saved
-4. Check `/public/uploads/` directory for uploaded images
-
-## Data Structure
-
-The form data will be converted to this format in Firebase:
+1. **Check Browser Console**: Look for any Firebase initialization errors
+2. **Verify Environment Variables**: Add this to your component temporarily to debug:
 
 ```javascript
-{
-  name: "Sarah Chen",
-  title: "Senior Product Designer", 
-  location: "San Francisco, CA",
-  avatar: "/uploads/a1b2c3d4e5f678901234567890123456.jpg", // Local file path
-  bio: "Passionate about creating intuitive user experiences...",
-  qrCode: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
-  expertise: ["UI/UX Design", "Product Strategy", "Design Systems"],
-  experience: [
-    {
-      role: "Senior Product Designer",
-      company: "TechCorp", 
-      period: "2021-2024"
-    }
-  ],
-  contact: {
-    email: "sarah.chen@email.com",
-    phone: "+1 (555) 123-4567"
-  },
-  social: {
-    linkedin: "https://linkedin.com/in/sarahchen",
-    portfolio: "https://sarahchen.design"
-  },
-  createdAt: Timestamp,
-  updatedAt: Timestamp
-}
-``` 
+useEffect(() => {
+  console.log('Firebase Config Check:', {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Set' : 'Missing',
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ? 'Set' : 'Missing',
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? 'Set' : 'Missing',
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ? 'Set' : 'Missing',
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ? 'Set' : 'Missing',
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ? 'Set' : 'Missing',
+  });
+}, []);
+```
+
+3. **Test Locally**: Make sure it works in development first
+4. **Check Vercel Logs**: Look at the deployment logs for any errors
+
+## 6. Common Solutions
+
+### Solution 1: Redeploy After Setting Environment Variables
+After setting environment variables in Vercel, you must redeploy:
+1. Go to your Vercel project
+2. Click "Deployments"
+3. Click "Redeploy" on your latest deployment
+
+### Solution 2: Clear Browser Cache
+Sometimes cached configurations can cause issues:
+1. Clear browser cache and cookies
+2. Try in incognito/private mode
+3. Try a different browser
+
+### Solution 3: Check Firebase Project Status
+1. Go to Firebase Console
+2. Check if your project is active
+3. Verify billing status (if applicable)
+
+## 7. Alternative: Use Firebase Config Directly
+
+If environment variables continue to cause issues, you can temporarily hardcode the config (NOT recommended for production):
+
+```javascript
+const firebaseConfig = {
+  apiKey: "your-actual-api-key",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "your-app-id"
+};
+```
+
+## 8. Final Checklist
+
+- [ ] All environment variables are set in Vercel
+- [ ] Environment variables are set for all environments (Production, Preview, Development)
+- [ ] Project has been redeployed after setting environment variables
+- [ ] Firebase project is active and accessible
+- [ ] Firestore rules allow read access
+- [ ] No network restrictions blocking Firebase
+- [ ] Browser console shows no Firebase initialization errors
+
+## 9. Still Having Issues?
+
+If you're still experiencing issues:
+1. Check the Vercel deployment logs
+2. Verify your Firebase project is in a supported region
+3. Consider creating a new Firebase project for testing
+4. Contact Vercel support if the issue persists 

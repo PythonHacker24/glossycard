@@ -3,8 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Clock, Globe } from 'lucide-react';
 import ProfileCard from './procard';
+import { useRouter } from 'next/navigation';
+import { getProfileData, ProfileData } from '@/lib/firebaseService';
 
-const DigitalCardsLanding = () => {
+export default function DigitalCardsLanding() {
+  const router = useRouter();
+
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
 
@@ -48,24 +52,59 @@ const DigitalCardsLanding = () => {
 
   const testimonials = [
     {
-      name: "Priya Sharma",
-      role: "SDE at Google",
-      content: "Got my dream job through campus placements. My digital card made me stand out among 200+ applicants!",
+      name: "Ayan Choradia",
+      role: "Tapir Money",
+      content: "Gloss Card helps with all my endavours of cold maling and reaching out clients to grow our startup",
       rating: 5
     },
     {
-      name: "Rahul Patel", 
-      role: "Product Manager at Microsoft",
-      content: "Off-campus placement became so easy. No more filling endless forms - just share one link!",
+      name: "Aditya Patil", 
+      role: "GSoC'25 Emory BMI and Product Builder",
+      content: "I use Gloss Card everyday to reach out potential clients and spread my products around",
       rating: 5
     },
     {
-      name: "Anita Singh",
-      role: "Data Scientist at Amazon",
-      content: "Got 3 referrals in one week! Seniors loved how professional and complete my digital card was.",
+      name: "Utkarsh Maurya",
+      role: "Embedded Engineer at Cypherrock",
+      content: "Gloss Card helps me network better when I am reaching out people online as well as offline",
       rating: 5
     }
   ];
+
+  function getstarted() {
+    if (router) {
+      router.push("/create-card");
+    }
+  }
+
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProfileData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const id =  "1vinteWSXTVsQsgYA28I";
+      if (!id) {
+        setError('No profile ID provided');
+        return;
+      }
+
+      const data = await getProfileData(id);
+      setProfileData(data);
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -80,7 +119,7 @@ const DigitalCardsLanding = () => {
             <a href="#benefits" className="text-gray-600 hover:text-black transition-colors">Benefits</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Reviews</a>
           </div>
-          <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium">
+          <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" onClick={getstarted}>
             Create
           </button>
         </nav>
@@ -99,7 +138,7 @@ const DigitalCardsLanding = () => {
             Just one powerful card that opens doors to your dream career.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center group">
+            <button className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center group" onClick={getstarted}>
               Create Your Card Free
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -148,7 +187,11 @@ const DigitalCardsLanding = () => {
             {/* Interactive Card Preview */}
             <div className="relative">
               <div className="relative overflow-hidden">
-                <ProfileCard />
+                <ProfileCard 
+                  profileData={profileData}
+                  isLoading={isLoading}
+                  error={error}
+                />
                 <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
               </div>
             </div>
@@ -201,29 +244,6 @@ const DigitalCardsLanding = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl mb-6 text-black">
-            Ready to Transform Your Career?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            Join thousands of successful professionals who&apos;ve already made the switch to digital cards.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-              Start Free
-            </button>
-            <button className="border border-gray-300 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-              Schedule Demo
-            </button>
-          </div>
-          <div className="mt-8 text-sm text-gray-500">
-            Completely for free • Setup in under 3 minutes
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-gray-200 bg-gray-50">
         <div className="max-w-6xl mx-auto">
@@ -272,5 +292,3 @@ const DigitalCardsLanding = () => {
     </div>
   );
 };
-
-export default DigitalCardsLanding;

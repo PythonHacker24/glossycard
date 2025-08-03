@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
 // Your Firebase configuration
 // Replace these with your actual Firebase config values
@@ -12,10 +12,41 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
+// Validate Firebase configuration
+const validateFirebaseConfig = () => {
+  const requiredFields = [
+    'apiKey',
+    'authDomain', 
+    'projectId',
+    'storageBucket',
+    'messagingSenderId',
+    'appId'
+  ];
+  
+  const missingFields = requiredFields.filter(field => !firebaseConfig[field as keyof typeof firebaseConfig]);
+  
+  if (missingFields.length > 0) {
+    console.error('Missing Firebase configuration fields:', missingFields);
+    console.error('Current config:', firebaseConfig);
+    throw new Error(`Firebase configuration is incomplete. Missing: ${missingFields.join(', ')}`);
+  }
+};
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app: any;
+let db: any;
 
-// Initialize Firestore
-export const db = getFirestore(app);
+try {
+  validateFirebaseConfig();
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  
+  // Enable offline persistence
+  console.log('Firebase initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize Firebase:', error);
+  throw error;
+}
 
+export { db };
 export default app; 
