@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Plus, X, Upload } from 'lucide-react';
 import { saveProfileData, uploadImage, ProfileData } from '@/lib/firebaseService';
 import QRCode from 'qrcode';
@@ -395,9 +396,11 @@ export default function ProfileForm() {
                   />
                 </label>
                 {profilePhotoPreview && (
-                  <img 
+                  <Image 
                     src={profilePhotoPreview} 
                     alt="Preview" 
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 )}

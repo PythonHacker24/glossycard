@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Your Firebase configuration
 // Replace these with your actual Firebase config values
@@ -33,8 +33,8 @@ const validateFirebaseConfig = () => {
 };
 
 // Initialize Firebase
-let app: any;
-let db: any;
+let app: FirebaseApp;
+let db: Firestore;
 
 try {
   validateFirebaseConfig();

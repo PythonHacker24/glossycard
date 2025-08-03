@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X, Loader2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { ProfileData } from '@/lib/firebaseService';
@@ -99,9 +100,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
           <div className="relative">
             <div className="w-20 h-20 bg-white rounded-full overflow-hidden">
               {profileData.avatar && profileData.avatar !== "/api/placeholder/120/120" ? (
-                <img 
+                <Image 
                   src={profileData.avatar} 
                   alt={profileData.name}
+                  width={80}
+                  height={80}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -261,9 +264,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
             </div>
             <div className="flex justify-center mb-4">
               {qrCodeDataURL && (
-                <img 
+                <Image 
                   src={qrCodeDataURL} 
                   alt="QR Code" 
+                  width={192}
+                  height={192}
                   className="w-48 h-48 border border-gray-200 rounded-lg"
                 />
               )}

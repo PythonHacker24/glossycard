@@ -1,4 +1,3 @@
-import Image from "next/image";
 import DiscoverTalent from "@/components/discover";
 
 export default function Home() {
