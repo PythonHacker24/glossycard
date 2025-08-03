@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, X, Upload } from 'lucide-react';
 import { saveProfileData, uploadImage, ProfileData } from '@/lib/firebaseService';
 import QRCode from 'qrcode';
@@ -28,6 +29,9 @@ interface FormData {
   phone: string;
   linkedinProfile: string;
   portfolioWebsite: string;
+  githubUrl: string;
+  meetingLink: string;
+  resumeLink: string;
   
   // Skills/Expertise
   skills: string[];
@@ -41,6 +45,9 @@ interface Errors {
 }
 
 export default function ProfileForm() {
+
+  const router = useRouter();
+
   const [formData, setFormData] = useState<FormData>({
     // Personal Information
     fullName: '',
@@ -55,6 +62,9 @@ export default function ProfileForm() {
     phone: '',
     linkedinProfile: '',
     portfolioWebsite: '',
+    githubUrl: '',
+    meetingLink: '',
+    resumeLink: '',
     
     // Skills/Expertise
     skills: [''],
@@ -181,8 +191,7 @@ export default function ProfileForm() {
     // Upload profile photo if exists
     let avatarUrl = "/api/placeholder/120/120"; // Default placeholder
     if (formData.profilePhoto) {
-      const fileName = `profiles/${Date.now()}_${formData.profilePhoto.name}`;
-      avatarUrl = await uploadImage(formData.profilePhoto, fileName);
+      avatarUrl = await uploadImage(formData.profilePhoto);
     }
 
     // Convert experience data
@@ -214,7 +223,10 @@ export default function ProfileForm() {
       },
       social: {
         linkedin: formData.linkedinProfile,
-        portfolio: formData.portfolioWebsite
+        portfolio: formData.portfolioWebsite,
+        github: formData.githubUrl,
+        meeting: formData.meetingLink,
+        resume: formData.resumeLink
       }
     };
   };
@@ -264,12 +276,32 @@ export default function ProfileForm() {
       console.log('Profile saved successfully with ID:', docId);
       alert('Profile created successfully!');
       
+      
+
       // You can redirect to the profile page here
-      // router.push(`/card/${docId}`);
+      router.push(`/card/${docId}`);
       
     } catch (error) {
       console.error('Error creating profile:', error);
-      alert('Error creating profile. Please try again.');
+      
+      // Show more specific error messages
+      let errorMessage = 'Error creating profile. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Missing Firebase environment variables')) {
+          errorMessage = 'Firebase configuration error. Please check your environment variables.';
+        } else if (error.message.includes('Missing or insufficient permissions')) {
+          errorMessage = 'Firebase permissions error. Please check your Firestore security rules.';
+        } else if (error.message.includes('Service unavailable')) {
+          errorMessage = 'Firebase service unavailable. Please check your internet connection.';
+        } else if (error.message.includes('Database not found')) {
+          errorMessage = 'Firebase database not found. Please check your project configuration.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -443,6 +475,45 @@ export default function ProfileForm() {
                   onChange={(e) => handleInputChange('portfolioWebsite', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
                   placeholder="https://yourportfolio.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  GitHub URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.githubUrl}
+                  onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://github.com/yourusername"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meeting Link
+                </label>
+                <input
+                  type="url"
+                  value={formData.meetingLink}
+                  onChange={(e) => handleInputChange('meetingLink', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://calendly.com/yourname or https://meet.google.com/..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Resume Link
+                </label>
+                <input
+                  type="url"
+                  value={formData.resumeLink}
+                  onChange={(e) => handleInputChange('resumeLink', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://drive.google.com/file/d/... or https://yourwebsite.com/resume"
                 />
               </div>
             </div>

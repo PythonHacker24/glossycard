@@ -1,10 +1,17 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X } from 'lucide-react';
+import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X, Loader2 } from 'lucide-react';
 import QRCode from 'qrcode';
+import { ProfileData } from '@/lib/firebaseService';
 
-const ProfileCard = () => {
+interface ProfileCardProps {
+  profileData?: ProfileData | null;
+  isLoading?: boolean;
+  error?: string | null;
+}
+
+const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = false, error = null }) => {
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
 
@@ -27,49 +34,49 @@ const ProfileCard = () => {
     }
   };
 
-  // Placeholder data structure - ready for Firebase integration
-  const profileData = {
-    name: "Sarah Chen",
-    title: "Senior Product Designer",
-    location: "San Francisco, CA",
-    avatar: "/api/placeholder/120/120", // Placeholder for profile image
-    bio: "Passionate about creating intuitive user experiences that bridge the gap between user needs and business goals. 5+ years of design expertise.",
-    qrCode: "/api/placeholder/40/40", // Placeholder for QR code
-    expertise: [
-      "UI/UX Design",
-      "Product Strategy", 
-      "Design Systems",
-      "User Research",
-      "Prototyping",
-      "Figma"
-    ],
-    experience: [
-      {
-        role: "Senior Product Designer",
-        company: "TechCorp",
-        period: "2021-2024"
-      },
-      {
-        role: "UX Designer", 
-        company: "StartupXYZ",
-        period: "2019-2021"
-      },
-      {
-        role: "Junior Designer",
-        company: "Creative Agency", 
-        period: "2017-2019"
-      }
-    ],
-    contact: {
-      email: "sarah.chen@email.com",
-      phone: "+1 (555) 123-4567"
-    },
-    social: {
-      linkedin: "https://linkedin.com/in/sarahchen",
-      github: "https://github.com/sarahchen",
-      portfolio: "https://sarahchen.design"
-    }
-  };
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-400" />
+            <p className="text-gray-500">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <X className="w-8 h-8 mx-auto mb-4 text-red-400" />
+            <p className="text-red-500 mb-2">Error loading profile</p>
+            <p className="text-gray-500 text-sm">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show not found state
+  if (!profileData) {
+    return (
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <Package className="w-8 h-8 mx-auto mb-4 text-gray-400" />
+            <p className="text-gray-500 mb-2">Profile not found</p>
+            <p className="text-gray-400 text-sm">The profile you&apos;re looking for doesn&apos;t exist</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
@@ -80,16 +87,26 @@ const ProfileCard = () => {
         <div className="flex justify-center mb-4">
           <div className="relative">
             <div className="w-20 h-20 bg-white rounded-full overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">SC</span>
-              </div>
+              {profileData.avatar && profileData.avatar !== "/api/placeholder/120/120" ? (
+                <img 
+                  src={profileData.avatar} 
+                  alt={profileData.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                  <span className="text-white text-2xl font-bold">
+                    {profileData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </span>
+                </div>
+              )}
             </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                <button onClick={generateQRCode}
-                className="flex items-center justify-center p-1 text-gray-700 transition-colors">
-                  <QrCode className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
+              <button onClick={generateQRCode}
+              className="flex items-center justify-center p-1 text-gray-700 transition-colors">
+                <QrCode className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -142,29 +159,56 @@ const ProfileCard = () => {
         <div className="space-y-3">
           {/* Email and Call */}
           <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-900 hover:bg-gray-50 transition-colors text-sm font-bold">
-              <Mail className="w-4 h-4 mr-2" />
-              Email
-            </button>
-            <button className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold">
-              <Phone className="w-4 h-4 mr-2" />
-              Call
-            </button>
+            {profileData.contact.email && (
+              <a 
+                href={`mailto:${profileData.contact.email}`}
+                className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-900 hover:bg-gray-50 transition-colors text-sm font-bold"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Email
+              </a>
+            )}
+            {profileData.contact.phone && (
+              <a 
+                href={`tel:${profileData.contact.phone}`}
+                className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
+              >
+                <Phone className="w-4 h-4 mr-2" />
+                Call
+              </a>
+            )}
           </div>
 
           {/* Schedule Meeting */}
-          <button className="w-full flex items-center justify-center px-3 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors text-sm font-bold">
-            <Calendar className="w-4 h-4 mr-2" />
-            Schedule Meeting
-          </button>
+          {profileData.social.meeting && (
+            <a 
+              href={profileData.social.meeting}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center px-3 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors text-sm font-bold"
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              Schedule Meeting
+            </a>
+          )}
 
           {/* Resume and Print */}
           <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold">
-              <FileText className="w-4 h-4 mr-2" />
-              Resume
-            </button>
-            <button className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold">
+            {profileData.social.resume && (
+              <a 
+                href={profileData.social.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Resume
+              </a>
+            )}
+            <button 
+              onClick={() => window.print()}
+              className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
+            >
               <Printer className="w-4 h-4 mr-2" />
               Print
             </button>
@@ -173,15 +217,21 @@ const ProfileCard = () => {
 
         {/* Social Links */}
         <div className="flex justify-center space-x-6 mt-6 pt-4 border-t border-gray-200">
-          <a href={profileData.social.linkedin} className="text-gray-600 hover:text-blue-600 transition-colors">
-            <Linkedin className="w-5 h-5" />
-          </a>
-          <a href={profileData.social.github} className="text-gray-600 hover:text-gray-900 transition-colors">
-            <Github className="w-5 h-5" />
-          </a>
-          <a href={profileData.social.portfolio} className="text-gray-600 hover:text-blue-600 transition-colors">
-            <ExternalLink className="w-5 h-5" />
-          </a>
+          {profileData.social.linkedin && (
+            <a href={profileData.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
+              <Linkedin className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.github && (
+            <a href={profileData.social.github} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Github className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.portfolio && (
+            <a href={profileData.social.portfolio} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
+              <ExternalLink className="w-5 h-5" />
+            </a>
+          )}
         </div>
       </div>
 

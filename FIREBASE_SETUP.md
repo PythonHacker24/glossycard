@@ -15,11 +15,7 @@
 3. Choose "Start in test mode" (for development)
 4. Select a location close to your users
 
-### Storage
-1. In Firebase Console, go to "Storage"
-2. Click "Get started"
-3. Choose "Start in test mode" (for development)
-4. Select the same location as Firestore
+**Note**: We're not using Firebase Storage. Images are stored locally in `/public/uploads/` directory.
 
 ## 3. Get Configuration
 
@@ -56,23 +52,27 @@ service cloud.firestore {
 }
 ```
 
-### Storage Rules
-```javascript
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /profiles/{allPaths=**} {
-      allow read, write: if true; // For development - change for production
-    }
-  }
-}
-```
+## 6. Image Upload System
 
-## 6. Test the Integration
+Images are uploaded to `/public/uploads/` directory with the following process:
+
+1. User selects an image file
+2. File is sent to `/api/upload` endpoint
+3. Original filename is hashed using MD5 + timestamp
+4. File is saved as `<hash>.<extension>` in `/public/uploads/`
+5. URL `/uploads/<hash>.<extension>` is stored in Firebase
+
+Example:
+- Original filename: `profile-photo.jpg`
+- Hashed filename: `a1b2c3d4e5f678901234567890123456.jpg`
+- Stored URL: `/uploads/a1b2c3d4e5f678901234567890123456.jpg`
+
+## 7. Test the Integration
 
 1. Start your development server: `npm run dev`
-2. Fill out the form and submit
+2. Fill out the form and upload an image
 3. Check Firebase Console to see the data being saved
+4. Check `/public/uploads/` directory for uploaded images
 
 ## Data Structure
 
@@ -83,7 +83,7 @@ The form data will be converted to this format in Firebase:
   name: "Sarah Chen",
   title: "Senior Product Designer", 
   location: "San Francisco, CA",
-  avatar: "https://firebasestorage.googleapis.com/...",
+  avatar: "/uploads/a1b2c3d4e5f678901234567890123456.jpg", // Local file path
   bio: "Passionate about creating intuitive user experiences...",
   qrCode: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
   expertise: ["UI/UX Design", "Product Strategy", "Design Systems"],
