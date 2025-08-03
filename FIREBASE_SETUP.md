@@ -36,6 +36,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 6. If you don't have a web app, click "Add app" and choose "Web"
 7. Copy the configuration object
 
+## 2.1. Enable Firebase Storage
+
+1. In Firebase Console, go to "Storage" in the left sidebar
+2. Click "Get started" if Storage isn't enabled yet
+3. Choose a location for your Storage bucket (select the closest to your users)
+4. Start in test mode (you can adjust security rules later)
+5. Your Storage bucket URL will be: `your-project-id.appspot.com`
+
 ## 3. Verify Firebase Project Settings
 
 ### Firestore Rules
@@ -47,6 +55,21 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /profiles/{document} {
       allow read: if true;  // Allow public read access
+      allow write: if true; // Allow public write access (adjust as needed)
+    }
+  }
+}
+```
+
+### Firebase Storage Rules
+Make sure your Firebase Storage security rules allow upload and read access:
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /uploads/{allPaths=**} {
+      allow read: if true;  // Allow public read access to uploaded files
       allow write: if true; // Allow public write access (adjust as needed)
     }
   }
@@ -124,7 +147,9 @@ const firebaseConfig = {
 - [ ] Environment variables are set for all environments (Production, Preview, Development)
 - [ ] Project has been redeployed after setting environment variables
 - [ ] Firebase project is active and accessible
+- [ ] Firebase Storage is enabled and configured
 - [ ] Firestore rules allow read access
+- [ ] Firebase Storage rules allow upload and read access
 - [ ] No network restrictions blocking Firebase
 - [ ] Browser console shows no Firebase initialization errors
 

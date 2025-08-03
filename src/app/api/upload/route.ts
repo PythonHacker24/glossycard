@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import app from '@/lib/firebase';
+
+// Initialize Firebase Storage
+const storage = getStorage(app);
 
 // Generate a hash from the original filename and timestamp
 const generateImageHash = (originalName: string): string => {
@@ -12,7 +15,7 @@ const generateImageHash = (originalName: string): string => {
 
 // Get file extension from filename
 const getFileExtension = (filename: string): string => {
-  return path.extname(filename).toLowerCase();
+  return filename.split('.').pop()?.toLowerCase() || '';
 };
 
 export async function POST(request: NextRequest) {
@@ -29,36 +32,58 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File must be an image' }, { status: 400 });
     }
 
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: 'File size must be less than 5MB' }, { status: 400 });
+    }
+
     // Generate hash and get extension
     const hash = generateImageHash(file.name);
     const extension = getFileExtension(file.name);
-    const filename = `${hash}${extension}`;
-    
-    // Ensure the uploads directory exists
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    await mkdir(uploadsDir, { recursive: true });
+    const filename = `${hash}.${extension}`;
     
     // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     
-    // Write file to public/uploads directory
-    const filePath = path.join(uploadsDir, filename);
-    await writeFile(filePath, buffer);
+    // Upload to Firebase Storage
+    const storageRef = ref(storage, `uploads/${filename}`);
     
-    // Return the public URL
-    const imageUrl = `/uploads/${filename}`;
+    await uploadBytes(storageRef, buffer, {
+      contentType: file.type,
+    });
+    
+    // Get the public URL
+    const downloadURL = await getDownloadURL(storageRef);
     
     return NextResponse.json({ 
       success: true, 
-      imageUrl,
+      imageUrl: downloadURL,
       filename 
     });
     
   } catch (error) {
     console.error('Error uploading image:', error);
+    
+    // More specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes('storage/unauthorized') || error.message.includes('permission')) {
+        return NextResponse.json(
+          { error: 'Storage access denied. Please check Firebase Storage permissions.' }, 
+          { status: 403 }
+        );
+      }
+      if (error.message.includes('storage/not-found')) {
+        return NextResponse.json(
+          { error: 'Storage bucket not found. Please check Firebase configuration.' }, 
+          { status: 404 }
+        );
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to upload image' }, 
+      { error: 'Failed to upload image. Please try again.' }, 
       { status: 500 }
     );
   }
