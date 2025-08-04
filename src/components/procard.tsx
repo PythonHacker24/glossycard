@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X, Loader2 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { ProfileData } from '@/lib/firebaseService';
+import { logProfileView, logContactAction, logSocialClick, logQRCodeGenerated, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 
 interface ProfileCardProps {
   profileData?: ProfileData | null;
@@ -28,6 +29,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
     console.log('Network Status:', navigator.onLine ? 'Online' : 'Offline');
   }, []);
 
+  // Log profile view when profile data is loaded
+  useEffect(() => {
+    if (profileData && !isLoading && !error) {
+      // Extract profile ID from URL or use a fallback
+      const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+      logProfileView(profileId, profileData.name);
+    }
+  }, [profileData, isLoading, error]);
+
   const generateQRCode = async () => {
     try {
       const url = window.location.href;
@@ -41,6 +51,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
       });
       setQrCodeDataURL(qrDataURL);
       setShowQRModal(true);
+      
+      // Log QR code generation
+      const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+      logQRCodeGenerated(profileId);
     } catch (error) {
       console.error('Error generating QR code:', error);
     }
@@ -176,6 +190,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
             {profileData.contact.email && (
               <a 
                 href={`mailto:${profileData.contact.email}`}
+                onClick={() => {
+                  const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                  logContactAction('email', profileId);
+                }}
                 className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-900 hover:bg-gray-50 transition-colors text-sm font-bold"
               >
                 <Mail className="w-4 h-4 mr-2" />
@@ -185,6 +203,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
             {profileData.contact.phone && (
               <a 
                 href={`tel:${profileData.contact.phone}`}
+                onClick={() => {
+                  const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                  logContactAction('phone', profileId);
+                }}
                 className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
               >
                 <Phone className="w-4 h-4 mr-2" />
@@ -199,6 +221,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
               href={profileData.social.meeting}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logContactAction('meeting', profileId);
+              }}
               className="w-full flex items-center justify-center px-3 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors text-sm font-bold"
             >
               <Calendar className="w-4 h-4 mr-2" />
@@ -213,6 +239,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
                 href={profileData.social.resume}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                  logSocialClick('resume', profileId);
+                }}
                 className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
               >
                 <FileText className="w-4 h-4 mr-2" />
@@ -220,7 +250,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
               </a>
             )}
             <button 
-              onClick={() => window.print()}
+              onClick={() => {
+                window.print();
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logAnalyticsEvent(AnalyticsEvent.PROFILE_PRINT, { profile_id: profileId });
+              }}
               className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-sm font-bold"
             >
               <Printer className="w-4 h-4 mr-2" />
@@ -232,17 +266,44 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
         {/* Social Links */}
         <div className="flex justify-center space-x-6 mt-6 pt-4 border-t border-gray-200">
           {profileData.social.linkedin && (
-            <a href={profileData.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <a 
+              href={profileData.social.linkedin} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('linkedin', profileId);
+              }}
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               <Linkedin className="w-5 h-5" />
             </a>
           )}
           {profileData.social.github && (
-            <a href={profileData.social.github} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <a 
+              href={profileData.social.github} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('github', profileId);
+              }}
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
               <Github className="w-5 h-5" />
             </a>
           )}
           {profileData.social.portfolio && (
-            <a href={profileData.social.portfolio} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <a 
+              href={profileData.social.portfolio} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('portfolio', profileId);
+              }}
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               <ExternalLink className="w-5 h-5" />
             </a>
           )}

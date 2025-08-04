@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Plus, X, Upload } from 'lucide-react';
 import { saveProfileData, uploadImage, ProfileData } from '@/lib/firebaseService';
+import { logCardCreated, logImageUpload, logError, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 import QRCode from 'qrcode';
 
 // TypeScript interfaces
@@ -117,6 +118,13 @@ export default function ProfileForm() {
         setProfilePhotoPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+      
+      // Log file selection
+      logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+        action: 'file_selected',
+        file_size: file.size,
+        file_type: file.type
+      });
     }
   };
 
@@ -192,7 +200,13 @@ export default function ProfileForm() {
     // Upload profile photo if exists
     let avatarUrl = "/api/placeholder/120/120"; // Default placeholder
     if (formData.profilePhoto) {
-      avatarUrl = await uploadImage(formData.profilePhoto);
+      try {
+        avatarUrl = await uploadImage(formData.profilePhoto);
+        logImageUpload(true, formData.profilePhoto.size);
+      } catch (error) {
+        logImageUpload(false, formData.profilePhoto.size, error instanceof Error ? error.message : 'Upload failed');
+        throw error;
+      }
     }
 
     // Convert experience data
@@ -275,15 +289,26 @@ export default function ProfileForm() {
       const docId = await saveProfileData(profileData);
       
       console.log('Profile saved successfully with ID:', docId);
+      
+      // Log card creation
+      logCardCreated(docId, !!formData.profilePhoto, profileData.expertise.length);
+      
       alert('Profile created successfully!');
       
-      
-
       // You can redirect to the profile page here
       router.push(`/card/${docId}`);
       
     } catch (error) {
       console.error('Error creating profile:', error);
+      
+      // Log error
+      logError('profile_creation_failed', error instanceof Error ? error.message : 'Unknown error', {
+        form_data: {
+          has_photo: !!formData.profilePhoto,
+          skills_count: formData.skills.filter(s => s.trim()).length,
+          experience_count: formData.experience.filter(e => e.jobTitle && e.companyName).length
+        }
+      });
       
       // Show more specific error messages
       let errorMessage = 'Error creating profile. Please try again.';

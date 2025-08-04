@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import app from '@/lib/firebase';
+import { logImageUpload } from '@/lib/analytics';
 
 // Initialize Firebase Storage
 const storage = getStorage(app);
@@ -19,9 +20,11 @@ const getFileExtension = (filename: string): string => {
 };
 
 export async function POST(request: NextRequest) {
+  let file: File | null = null;
+  
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
+    file = formData.get('file') as File;
     
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -57,6 +60,9 @@ export async function POST(request: NextRequest) {
     // Get the public URL
     const downloadURL = await getDownloadURL(storageRef);
     
+    // Log successful upload
+    logImageUpload(true, file.size);
+    
     return NextResponse.json({ 
       success: true, 
       imageUrl: downloadURL,
@@ -65,6 +71,10 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('Error uploading image:', error);
+    
+    // Log failed upload
+    const fileSize = file?.size;
+    logImageUpload(false, fileSize, error instanceof Error ? error.message : 'Unknown error');
     
     // More specific error handling
     if (error instanceof Error) {

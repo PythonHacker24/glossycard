@@ -1,5 +1,6 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
+import { getAnalytics, Analytics, isSupported } from 'firebase/analytics';
 
 // Your Firebase configuration
 // Replace these with your actual Firebase config values
@@ -35,11 +36,26 @@ const validateFirebaseConfig = () => {
 // Initialize Firebase
 let app: FirebaseApp;
 let db: Firestore;
+let analytics: Analytics | null = null;
 
 try {
   validateFirebaseConfig();
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
+  
+  // Initialize Analytics if supported (client-side only)
+  if (typeof window !== 'undefined') {
+    isSupported().then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app);
+        console.log('Firebase Analytics initialized successfully');
+      } else {
+        console.log('Firebase Analytics not supported in this environment');
+      }
+    }).catch((error) => {
+      console.warn('Failed to initialize Firebase Analytics:', error);
+    });
+  }
   
   // Enable offline persistence
   console.log('Firebase initialized successfully');
@@ -48,5 +64,5 @@ try {
   throw error;
 }
 
-export { db };
+export { db, analytics };
 export default app; 

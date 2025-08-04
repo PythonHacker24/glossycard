@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { logPageView, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 
 // TypeScript interfaces
 interface Skill {
@@ -117,6 +118,11 @@ export default function DiscoverTalent() {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
+  // Log page view
+  useEffect(() => {
+    logPageView('Discover Page', '/discover');
+  }, []);
+
   // Simulate loading data from JSON/API
   useEffect(() => {
     const loadTalentData = async () => {
@@ -159,7 +165,12 @@ export default function DiscoverTalent() {
     setFilteredTalents(filtered);
   }, [searchQuery, talents]);
 
-  const handleProfileClick = (profileURL: string) => {
+  const handleProfileClick = (profileURL: string, talentName: string) => {
+    logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+      action: 'talent_profile_clicked',
+      talent_name: talentName,
+      profile_url: profileURL
+    });
     router.push(profileURL);
   };
 
@@ -175,7 +186,7 @@ export default function DiscoverTalent() {
   const TalentCard: React.FC<TalentCardProps> = ({ talent }) => (
     <div 
       className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => handleProfileClick(talent.profileURL)}
+      onClick={() => handleProfileClick(talent.profileURL, talent.name)}
     >
       <div className="flex flex-col items-center text-center">
         <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 flex items-center justify-center">
@@ -246,7 +257,15 @@ export default function DiscoverTalent() {
                 placeholder="Search by name, role, or skills..."
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value.trim()) {
+                    logAnalyticsEvent(AnalyticsEvent.SEARCH_PERFORMED, {
+                      search_query: e.target.value,
+                      results_count: filteredTalents.length
+                    });
+                  }
+                }}
               />
             </div>
           </div>

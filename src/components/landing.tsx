@@ -5,6 +5,7 @@ import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Cloc
 import ProfileCard from './procard';
 import { useRouter } from 'next/navigation';
 import { getProfileData, ProfileData } from '@/lib/firebaseService';
+import { logPageView, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 
 export default function DigitalCardsLanding() {
   const router = useRouter();
@@ -18,6 +19,11 @@ export default function DigitalCardsLanding() {
       setActiveFeature(prev => (prev + 1) % 4);
     }, 3000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Log page view
+  useEffect(() => {
+    logPageView('Landing Page', '/');
   }, []);
 
   const features = [
@@ -73,6 +79,10 @@ export default function DigitalCardsLanding() {
 
   function getstarted() {
     if (router) {
+      logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+        action: 'create_card_clicked',
+        location: 'landing_page'
+      });
       router.push("/create-card");
     }
   }
@@ -119,9 +129,18 @@ export default function DigitalCardsLanding() {
             <a href="#benefits" className="text-gray-600 hover:text-black transition-colors">Benefits</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Reviews</a>
           </div>
-          <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" onClick={getstarted}>
-            Create
-          </button>
+                      <button 
+              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
+              onClick={() => {
+                logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+                  action: 'header_create_clicked',
+                  location: 'header'
+                });
+                getstarted();
+              }}
+            >
+              Create
+            </button>
         </nav>
       </header>
 
@@ -138,7 +157,16 @@ export default function DigitalCardsLanding() {
             Just one powerful card that opens doors to your dream career.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center group" onClick={getstarted}>
+            <button 
+              className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center group" 
+              onClick={() => {
+                logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+                  action: 'hero_create_clicked',
+                  location: 'hero_section'
+                });
+                getstarted();
+              }}
+            >
               Create Your Card Free
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
