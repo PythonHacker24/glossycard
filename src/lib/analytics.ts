@@ -21,6 +21,10 @@ export enum AnalyticsEvent {
   GITHUB_CLICK = 'github_click',
   PORTFOLIO_CLICK = 'portfolio_click',
   RESUME_CLICK = 'resume_click',
+  INSTAGRAM_CLICK = 'instagram_click',
+  TWITTER_CLICK = 'twitter_click',
+  YOUTUBE_CLICK = 'youtube_click',
+  MEDIUM_CLICK = 'medium_click',
   
   // QR Code
   QR_CODE_GENERATED = 'qr_code_generated',
@@ -102,26 +106,32 @@ class AnalyticsService {
   }
 
   // Log contact action
-  logContactAction(action: 'email' | 'phone' | 'meeting', profileId: string) {
+  logContactAction(action: 'email' | 'phone' | 'meeting' | 'payment', profileId: string) {
     const eventMap = {
       email: AnalyticsEvent.EMAIL_CLICK,
       phone: AnalyticsEvent.PHONE_CLICK,
-      meeting: AnalyticsEvent.MEETING_SCHEDULE
+      meeting: AnalyticsEvent.MEETING_SCHEDULE,
+      payment: AnalyticsEvent.MEETING_SCHEDULE // Using existing event for now
     };
 
     this.logEvent(eventMap[action], {
       profile_id: profileId,
+      action,
       timestamp: new Date().toISOString()
     });
   }
 
   // Log social link click
-  logSocialClick(platform: 'linkedin' | 'github' | 'portfolio' | 'resume', profileId: string) {
+  logSocialClick(platform: 'linkedin' | 'github' | 'portfolio' | 'resume' | 'instagram' | 'twitter' | 'youtube' | 'medium', profileId: string) {
     const eventMap = {
       linkedin: AnalyticsEvent.LINKEDIN_CLICK,
       github: AnalyticsEvent.GITHUB_CLICK,
       portfolio: AnalyticsEvent.PORTFOLIO_CLICK,
-      resume: AnalyticsEvent.RESUME_CLICK
+      resume: AnalyticsEvent.RESUME_CLICK,
+      instagram: AnalyticsEvent.INSTAGRAM_CLICK,
+      twitter: AnalyticsEvent.TWITTER_CLICK,
+      youtube: AnalyticsEvent.YOUTUBE_CLICK,
+      medium: AnalyticsEvent.MEDIUM_CLICK
     };
 
     this.logEvent(eventMap[platform], {
@@ -224,11 +234,11 @@ export const logProfileView = (profileId: string, profileName: string) => {
   analyticsService.logProfileView(profileId, profileName);
 };
 
-export const logContactAction = (action: 'email' | 'phone' | 'meeting', profileId: string) => {
+export const logContactAction = (action: 'email' | 'phone' | 'meeting' | 'payment', profileId: string) => {
   analyticsService.logContactAction(action, profileId);
 };
 
-export const logSocialClick = (platform: 'linkedin' | 'github' | 'portfolio' | 'resume', profileId: string) => {
+export const logSocialClick = (platform: 'linkedin' | 'github' | 'portfolio' | 'resume' | 'instagram' | 'twitter' | 'youtube' | 'medium', profileId: string) => {
   analyticsService.logSocialClick(platform, profileId);
 };
 

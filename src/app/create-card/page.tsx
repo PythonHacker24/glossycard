@@ -35,6 +35,15 @@ interface FormData {
   meetingLink: string;
   resumeLink: string;
   
+  // Social Media Links
+  instagramUrl: string;
+  twitterUrl: string;
+  youtubeUrl: string;
+  mediumUrl: string;
+  
+  // Payment Information
+  paymentLink: string;
+  
   // Skills/Expertise
   skills: string[];
   
@@ -67,6 +76,15 @@ export default function ProfileForm() {
     githubUrl: '',
     meetingLink: '',
     resumeLink: '',
+    
+    // Social Media Links
+    instagramUrl: '',
+    twitterUrl: '',
+    youtubeUrl: '',
+    mediumUrl: '',
+    
+    // Payment Information
+    paymentLink: '',
     
     // Skills/Expertise
     skills: [''],
@@ -230,6 +248,7 @@ export default function ProfileForm() {
       avatar: avatarUrl,
       bio: formData.bio,
       qrCode: qrCodeDataURL,
+      paymentLink: formData.paymentLink || undefined,
       expertise,
       experience,
       contact: {
@@ -240,6 +259,10 @@ export default function ProfileForm() {
         linkedin: formData.linkedinProfile,
         portfolio: formData.portfolioWebsite,
         github: formData.githubUrl,
+        instagram: formData.instagramUrl,
+        twitter: formData.twitterUrl,
+        youtube: formData.youtubeUrl,
+        medium: formData.mediumUrl,
         meeting: formData.meetingLink,
         resume: formData.resumeLink
       }
@@ -432,6 +455,22 @@ export default function ProfileForm() {
 
             <div className="mt-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payment Link (Optional)
+              </label>
+              <input
+                type="url"
+                value={formData.paymentLink}
+                onChange={(e) => handleInputChange('paymentLink', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                placeholder="https://paypal.me/yourusername or https://venmo.com/yourusername"
+              />
+              <p className="text-sm text-gray-500 mt-2">
+                Add a payment link for people to send you money.
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Bio/Description
               </label>
               <textarea
@@ -514,6 +553,58 @@ export default function ProfileForm() {
                   onChange={(e) => handleInputChange('githubUrl', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
                   placeholder="https://github.com/yourusername"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Instagram URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.instagramUrl}
+                  onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://instagram.com/yourusername"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Twitter URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.twitterUrl}
+                  onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://twitter.com/yourusername"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  YouTube URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.youtubeUrl}
+                  onChange={(e) => handleInputChange('youtubeUrl', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://youtube.com/@yourchannel"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Medium URL
+                </label>
+                <input
+                  type="url"
+                  value={formData.mediumUrl}
+                  onChange={(e) => handleInputChange('mediumUrl', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-400"
+                  placeholder="https://medium.com/@yourusername"
                 />
               </div>
 

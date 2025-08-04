@@ -8,6 +8,7 @@ export interface ProfileData {
   avatar: string;
   bio: string;
   qrCode: string;
+  paymentLink?: string;
   expertise: string[];
   experience: {
     role: string;
@@ -22,6 +23,10 @@ export interface ProfileData {
     linkedin: string;
     github?: string;
     portfolio: string;
+    instagram?: string;
+    twitter?: string;
+    youtube?: string;
+    medium?: string;
     meeting?: string;
     resume?: string;
   };

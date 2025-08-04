@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X, Loader2 } from 'lucide-react';
+import { Mail, Phone, Calendar, FileText, Printer, Package, MapPin, Linkedin, Github, ExternalLink, QrCode, X, Loader2, Instagram, Twitter, Youtube, PencilIcon, CreditCardIcon } from 'lucide-react';
 import QRCode from 'qrcode';
 import { ProfileData } from '@/lib/firebaseService';
 import { logProfileView, logContactAction, logSocialClick, logQRCodeGenerated, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
@@ -261,6 +261,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
               Print
             </button>
           </div>
+
+          {/* Payment Link */}
+          {profileData.paymentLink && (
+            <a 
+              href={profileData.paymentLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logContactAction('payment', profileId);
+              }}
+              className="w-full flex items-center justify-center px-3 py-2 bg-green-500 text-white rounded-xl hover:bg-green-700 transition-colors text-sm font-bold"
+            >
+              <CreditCardIcon className="w-4 h-4 mr-2" />
+              Make Payment
+            </a>
+          )}
         </div>
 
         {/* Social Links */}
@@ -305,6 +322,62 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData, isLoading = fals
               className="text-gray-600 hover:text-blue-600 transition-colors"
             >
               <ExternalLink className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.instagram && (
+            <a 
+              href={profileData.social.instagram} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('instagram', profileId);
+              }}
+              className="text-gray-600 hover:text-pink-600 transition-colors"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.twitter && (
+            <a 
+              href={profileData.social.twitter} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('twitter', profileId);
+              }}
+              className="text-gray-600 hover:text-blue-400 transition-colors"
+            >
+              <Twitter className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.youtube && (
+            <a 
+              href={profileData.social.youtube} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('youtube', profileId);
+              }}
+              className="text-gray-600 hover:text-red-600 transition-colors"
+            >
+              <Youtube className="w-5 h-5" />
+            </a>
+          )}
+          {profileData.social.medium && (
+            <a 
+              href={profileData.social.medium} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => {
+                const profileId = typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'unknown' : 'unknown';
+                logSocialClick('medium', profileId);
+              }}
+              className="text-gray-600 hover:text-green-600 transition-colors"
+            >
+              <PencilIcon className="w-5 h-5" />
             </a>
           )}
         </div>
