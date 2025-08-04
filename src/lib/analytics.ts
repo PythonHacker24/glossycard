@@ -59,14 +59,15 @@ class AnalyticsService {
   }
 
   // Log a custom event
-  logEvent(eventName: AnalyticsEvent, parameters?: Record<string, any>) {
+  logEvent(eventName: AnalyticsEvent, parameters?: Record<string, string | number | boolean>) {
     if (!this.isEnabled || !analytics) {
       console.log(`Analytics event (disabled): ${eventName}`, parameters);
       return;
     }
 
     try {
-      logEvent(analytics, eventName, parameters);
+      // Convert our enum to string for Firebase Analytics
+      logEvent(analytics, eventName as string, parameters);
       console.log(`Analytics event logged: ${eventName}`, parameters);
     } catch (error) {
       console.error('Failed to log analytics event:', error);
@@ -151,7 +152,7 @@ class AnalyticsService {
   // Log image upload
   logImageUpload(success: boolean, fileSize?: number, errorMessage?: string) {
     const eventName = success ? AnalyticsEvent.IMAGE_UPLOADED : AnalyticsEvent.IMAGE_UPLOAD_FAILED;
-    const parameters: Record<string, any> = {
+    const parameters: Record<string, string | number | boolean> = {
       timestamp: new Date().toISOString()
     };
 
@@ -162,13 +163,21 @@ class AnalyticsService {
   }
 
   // Log error
-  logError(errorType: string, errorMessage: string, context?: Record<string, any>) {
-    this.logEvent(AnalyticsEvent.ERROR_OCCURRED, {
+  logError(errorType: string, errorMessage: string, context?: Record<string, string | number | boolean>) {
+    const parameters: Record<string, string | number | boolean> = {
       error_type: errorType,
       error_message: errorMessage,
-      context,
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (context) {
+      // Flatten context object into parameters
+      Object.entries(context).forEach(([key, value]) => {
+        parameters[`context_${key}`] = value;
+      });
+    }
+
+    this.logEvent(AnalyticsEvent.ERROR_OCCURRED, parameters);
   }
 
   // Set user ID (if you implement authentication later)
@@ -183,7 +192,7 @@ class AnalyticsService {
   }
 
   // Set user properties
-  setUserProperties(properties: Record<string, any>) {
+  setUserProperties(properties: Record<string, string | number | boolean>) {
     if (!this.isEnabled || !analytics) return;
 
     try {
@@ -203,7 +212,7 @@ class AnalyticsService {
 export const analyticsService = new AnalyticsService();
 
 // Export convenience functions
-export const logAnalyticsEvent = (eventName: AnalyticsEvent, parameters?: Record<string, any>) => {
+export const logAnalyticsEvent = (eventName: AnalyticsEvent, parameters?: Record<string, string | number | boolean>) => {
   analyticsService.logEvent(eventName, parameters);
 };
 
@@ -235,6 +244,6 @@ export const logImageUpload = (success: boolean, fileSize?: number, errorMessage
   analyticsService.logImageUpload(success, fileSize, errorMessage);
 };
 
-export const logError = (errorType: string, errorMessage: string, context?: Record<string, any>) => {
+export const logError = (errorType: string, errorMessage: string, context?: Record<string, string | number | boolean>) => {
   analyticsService.logError(errorType, errorMessage, context);
 }; 

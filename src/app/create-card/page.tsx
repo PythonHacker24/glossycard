@@ -303,11 +303,9 @@ export default function ProfileForm() {
       
       // Log error
       logError('profile_creation_failed', error instanceof Error ? error.message : 'Unknown error', {
-        form_data: {
-          has_photo: !!formData.profilePhoto,
-          skills_count: formData.skills.filter(s => s.trim()).length,
-          experience_count: formData.experience.filter(e => e.jobTitle && e.companyName).length
-        }
+        has_photo: !!formData.profilePhoto,
+        skills_count: formData.skills.filter(s => s.trim()).length,
+        experience_count: formData.experience.filter(e => e.jobTitle && e.companyName).length
       });
       
       // Show more specific error messages

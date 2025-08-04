@@ -12,7 +12,7 @@ interface AnalyticsData {
   recentEvents: Array<{
     event: string;
     timestamp: string;
-    data?: any;
+    data?: string;
   }>;
 }
 
