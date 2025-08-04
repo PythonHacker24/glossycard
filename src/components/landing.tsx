@@ -29,23 +29,23 @@ export default function DigitalCardsLanding() {
   const features = [
     {
       icon: <Briefcase className="w-6 h-6" />,
-      title: "College Placements",
-      description: "Stand out in campus interviews with professional digital cards that showcase your skills dynamically"
+      title: "Cold Emails",
+      description: "Add QR code and link to your Gloss Card to reduce the friction of manually responding and improve changes of getting more responses"
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      title: "Off-Campus Opportunities", 
+      title: "Job Seekers", 
       description: "Network globally and apply to companies worldwide with instantly shareable professional profiles"
     },
     {
       icon: <FileText className="w-6 h-6" />,
       title: "No More Forms",
-      description: "Skip repetitive job application forms - one card contains everything recruiters need"
+      description: "Skip repetitive job application forms. One card contains everything recruiters need"
     },
     {
       icon: <Share2 className="w-6 h-6" />,
-      title: "Instant Referrals",
-      description: "Get referrals faster by sharing your complete professional story in seconds"
+      title: "Instant Sharing",
+      description: "Get recommended faster by sharing your complete professional story in seconds"
     }
   ];
 
@@ -59,8 +59,8 @@ export default function DigitalCardsLanding() {
   const testimonials = [
     {
       name: "Ayan Choradia",
-      role: "Tapir Money",
-      content: "Gloss Card helps with all my endavours of cold maling and reaching out clients to grow our startup",
+      role: "Engineer at Tapir Money",
+      content: "Gloss Card helps with all my endavours of cold mailing and reaching out clients",
       rating: 5
     },
     {
@@ -153,8 +153,7 @@ export default function DigitalCardsLanding() {
             Made Simple
           </h1>
           <p className="text-xs md:text-xl mb-8 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Create stunning digital cards that land you jobs. No more filling forms, no more outdated resumes. 
-            Just one powerful card that opens doors to your dream career.
+            Create stunning digital cards that help you get more leads and expand your network. No more filling forms, no more outdated resumes. 
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button 
@@ -175,7 +174,7 @@ export default function DigitalCardsLanding() {
             </button>
           </div>
           <div className="mt-12 text-sm text-gray-500">
-            Trusted by 50,000+ students and professionals
+            Trusted by students and professionals
           </div>
         </div>
       </section>
@@ -231,7 +230,7 @@ export default function DigitalCardsLanding() {
       <section id="benefits" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl text-center mb-16 text-black">
-            Supercharge Your Job Hunt
+            Supercharge Your Networking
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
