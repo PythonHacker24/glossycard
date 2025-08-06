@@ -29,18 +29,18 @@ export default function DigitalCardsLanding() {
   const features = [
     {
       icon: <Briefcase className="w-6 h-6" />,
-      title: "Cold Emails",
+      title: "Cold Emails & Marketing",
       description: "Add QR code and link to your Gloss Card to reduce the friction of manually responding and improve changes of getting more responses"
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      title: "Job Seekers", 
+      title: "Job Seekers & Freelancers", 
       description: "Network globally and apply to companies worldwide with instantly shareable professional profiles"
     },
     {
       icon: <FileText className="w-6 h-6" />,
       title: "No More Forms",
-      description: "Skip repetitive job application forms. One card contains everything recruiters need"
+      description: "Skip repetitive forms. One card contains everything the other party need"
     },
     {
       icon: <Share2 className="w-6 h-6" />,
@@ -52,8 +52,8 @@ export default function DigitalCardsLanding() {
   const benefits = [
     { icon: <Zap className="w-5 h-5" />, title: "Lightning Fast", desc: "Share your profile in under 2 seconds" },
     { icon: <Shield className="w-5 h-5" />, title: "Always Updated", desc: "Real-time sync across all platforms" },
-    { icon: <Clock className="w-5 h-5" />, title: "Save 5+ Hours", desc: "Per job application cycle" },
-    { icon: <Users className="w-5 h-5" />, title: "95% Response Rate", desc: "From recruiters and hiring managers" }
+    { icon: <Clock className="w-5 h-5" />, title: "Save Multiple Hours", desc: "Per application/forms cycle" },
+    { icon: <Users className="w-5 h-5" />, title: "Better Response Rate", desc: "From recruiters and hiring managers" }
   ];
 
   const testimonials = [
