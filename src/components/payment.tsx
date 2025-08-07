@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { Phone, Mail, Globe, MapPin, CheckCircle, BriefcaseBusinessIcon } from 'lucide-react';
+import { logPageView, logContactAction, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 
 interface BusinessInfo {
   name: string;
@@ -29,6 +30,62 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
   isLoading = false,
   error = null,
 }) => {
+  // Log page view when component mounts
+  useEffect(() => {
+    if (!isLoading && !error) {
+      logPageView('Payment Page', '/payments/[id]');
+      logAnalyticsEvent(AnalyticsEvent.PAGE_VIEW, {
+        page_name: 'Payment Page',
+        business_name: business.name,
+        business_company: business.company,
+        wallet_name: walletName
+      });
+    }
+  }, [isLoading, error, business.name, business.company, walletName]);
+
+  // Log error analytics when error occurs
+  useEffect(() => {
+    if (error) {
+      logAnalyticsEvent(AnalyticsEvent.ERROR_OCCURRED, {
+        error_type: 'payment_page_error',
+        error_message: error,
+        business_name: business.name,
+        business_company: business.company
+      });
+    }
+  }, [error, business.name, business.company]);
+
+  // Handle payment link click
+  const handlePaymentLinkClick = () => {
+    logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+      button_type: 'payment_link',
+      business_name: business.name,
+      business_company: business.company,
+      wallet_name: walletName
+    });
+  };
+
+  // Handle contact action clicks
+  const handleContactAction = (action: 'email' | 'phone' | 'website') => {
+    if (action === 'email' || action === 'phone') {
+      logContactAction(action, business.name);
+    }
+    logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+      button_type: `contact_${action}`,
+      business_name: business.name,
+      business_company: business.company
+    });
+  };
+
+  // Handle QR code interaction
+  const handleQRCodeInteraction = () => {
+    logAnalyticsEvent(AnalyticsEvent.QR_CODE_SCANNED, {
+      business_name: business.name,
+      business_company: business.company,
+      wallet_name: walletName
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
@@ -57,16 +114,24 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 p-20">
-        <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
-          <div className="flex items-center justify-center h-96">
-            <div className="text-center">
-              <svg className="w-8 h-8 mx-auto mb-4 text-red-400" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
-                <path fill="currentColor" d="M12 8v4m0 4h.01" className="opacity-75" />
-              </svg>
-              <p className="text-red-500 mb-2">Error loading payment details</p>
-              <p className="text-gray-500 text-sm">{error}</p>
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
+        <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
+          <div className="px-8 py-6 bg-white border-b-1">
+            <div className="flex items-center justify-center space-x-2">
+              <h1 className="text-4xl text-black mt-3">Error Loading Payment Card</h1>
+            </div>
+            <p className="text-center text-sm text-gray-600 mt-2">Unable to load payment details</p>
+          </div>
+          <div className="bg-white p-8">
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <svg className="w-12 h-12 mx-auto mb-4 text-red-400" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+                  <path fill="currentColor" d="M12 8v4m0 4h.01" className="opacity-75" />
+                </svg>
+                <p className="text-red-500 mb-2 text-lg">Error loading payment details</p>
+                <p className="text-gray-500 text-sm">{error}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -98,7 +163,11 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
                 <div className="bg-white p-6 rounded-xl border-1 shadow-sm">
                 <span className="block w-full text-center text-gray-800 text-lg tracking-wide mb-3">{walletName}</span>
                   {/* QR Code Placeholder */}
-                  <div className="w-48 h-48 bg-white border-1 rounded-lg flex items-center justify-center relative overflow-hidden pb-4">
+                  <div 
+                    className="w-48 h-48 bg-white border-1 rounded-lg flex items-center justify-center relative overflow-hidden pb-4 cursor-pointer"
+                    onClick={handleQRCodeInteraction}
+                    title="Click to track QR code interaction"
+                  >
                     <Image 
                         src={paymentQR} 
                         alt={business.name}
@@ -113,6 +182,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 px-6 py-2 bg-gray-800 text-white rounded-lg font-semibold text-sm shadow hover:bg-gray-800 transition-colors"
+                onClick={handlePaymentLinkClick}
               >
                 Pay via Link
               </a>
@@ -136,18 +206,30 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
                     <h4 className="text-lg font-semibold text-gray-800">Contact Details</h4>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 text-gray-700">
+                    <div 
+                      className="flex items-center space-x-3 text-gray-700 cursor-pointer hover:text-gray-900 transition-colors"
+                      onClick={() => handleContactAction('phone')}
+                    >
                       <Phone className="w-4 h-4" />
                       <span>{business.phone}</span>
                     </div>
-                    <div className="flex items-center space-x-3 text-gray-700">
+                    <div 
+                      className="flex items-center space-x-3 text-gray-700 cursor-pointer hover:text-gray-900 transition-colors"
+                      onClick={() => handleContactAction('email')}
+                    >
                       <Mail className="w-4 h-4" />
                       <span>{business.email}</span>
                     </div>
-                    <div className="flex items-center space-x-3 text-gray-700">
+                    <a 
+                      href={business.website.startsWith('http') ? business.website : `https://${business.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 transition-colors"
+                      onClick={() => handleContactAction('website')}
+                    >
                       <Globe className="w-4 h-4" />
                       <span>{business.website}</span>
-                    </div>
+                    </a>
                     <div className="flex items-center space-x-3 text-gray-700">
                       <MapPin className="w-4 h-4" />
                       <span>{business.address}</span>
