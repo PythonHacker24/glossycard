@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Clock, Globe } from 'lucide-react';
 import ProfileCard from './procard';
+import GlossCardPaymentComponent from './payment';
 import { useRouter } from 'next/navigation';
-import { getProfileData, ProfileData } from '@/lib/firebaseService';
+import { getPaymentData, getProfileData, PaymentData, ProfileData } from '@/lib/firebaseService';
 import { logPageView, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 
 export default function DigitalCardsLanding() {
@@ -88,12 +89,12 @@ export default function DigitalCardsLanding() {
   }
 
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  // const [profileerror, setProfileError] = useState<string | null>(null);
 
   const fetchProfileData = async () => {
     try {
-      setIsLoading(true);
+      setIsProfileLoading(true);
       setError(null);
       
       const id =  "Ha2hSiG2gtpFNfzddBsc";
@@ -108,7 +109,7 @@ export default function DigitalCardsLanding() {
       console.error('Error fetching profile:', err);
       setError(err instanceof Error ? err.message : 'Failed to load profile');
     } finally {
-      setIsLoading(false);
+      setIsProfileLoading(false);
     }
   };
 
@@ -116,10 +117,40 @@ export default function DigitalCardsLanding() {
     fetchProfileData();
   }, []);
 
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPaymentData = async () => {
+      try {
+        setIsPaymentLoading(true);
+        setError(null);
+        const id =  "adityapatil";
+        if (!id) {
+          setError('No payment ID provided');
+          return;
+        }
+        const data = await getPaymentData(id);
+        if (data) {
+          setPaymentData(data);
+        } else {
+          setError('No payment data found for this ID');
+        }
+      } catch (err) {
+        console.error('Error fetching payment data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load payment data');
+      } finally {
+        setIsPaymentLoading(false);
+      }
+    };
+    fetchPaymentData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Header */}
-      <header className="border-b border-gray-100">
+      <header className="border-b border-gray-300">
         <nav className="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
           <div className="text-3xl text-black">
             Gloss Card
@@ -129,8 +160,21 @@ export default function DigitalCardsLanding() {
             <a href="#benefits" className="text-gray-600 hover:text-black transition-colors">Benefits</a>
             <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Reviews</a>
           </div>
-                      <button 
-              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
+          <div className="flex items-center space-x-2">
+            <button 
+              className="bg-transparent text-gray-900 px-6 py-2 rounded-lg border-1 hover:bg-gray-200 transition-colors text-lg font-medium" 
+              onClick={() => {
+                logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+                  action: 'header_payments_card_clicked',
+                  location: 'header'
+                });
+                router.push('/payments/Ha2hSiG2gtpFNfzddBsc');
+              }}
+            >
+              Payments
+            </button>
+            <button 
+              className="bg-black text-white px-10 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
               onClick={() => {
                 logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
                   action: 'header_create_clicked',
@@ -141,19 +185,20 @@ export default function DigitalCardsLanding() {
             >
               Create
             </button>
+          </div>
         </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-6">
+      <section className="text-center py-20 px-6 bg-stone-50">
         <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-5xl md:text-6xl mb-6 text-black leading-tight">
-            Sharing Your Digital Card
+          <h1 className="text-5xl md:text-6xl mb-4 text-black leading-tight">
+            Smart Networking
             <br />
-            Made Simple
+            With Digital Cards
           </h1>
-          <p className="text-xs md:text-xl mb-8 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Create stunning digital cards that help you get more leads and expand your network. No more filling forms, no more outdated resumes. 
+          <p className="text-xs md:text-xl mb-6 text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Get more leads with just one card and boost your reach
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button 
@@ -173,18 +218,19 @@ export default function DigitalCardsLanding() {
               Watch Demo
             </button>
           </div>
-          <div className="mt-12 text-sm text-gray-500">
+          <div className="mt-10 text-sm text-gray-500">
             Trusted by students and professionals
           </div>
         </div>
       </section>
 
       {/* Interactive Features */}
-      <section id="features" className="py-20 px-6 bg-gray-50">
+      <section id="features" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl text-center mb-16 text-black">
-            Why Choose Gloss Cards?
+          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
+            Introducting Gloss Cards
           </h2>
+          <p className='text-center text-gray-600 mb-16'>Share Professional Portfolio Cards</p>
           
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-4">
@@ -216,9 +262,44 @@ export default function DigitalCardsLanding() {
               <div className="relative overflow-hidden">
                 <ProfileCard 
                   profileData={profileData}
-                  isLoading={isLoading}
+                  isLoading={isProfileLoading}
                   error={error}
                 />
+                <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Payments */}
+      <section id="features" className="py-20 px-6 bg-stone-50">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
+            Business Payments Made Simple
+          </h2>
+          <p className='text-center text-gray-600 mb-16'>Send Professional Payment Cards</p>
+          
+          <div className="grid gap-12 items-center">
+            {/* Interactive Card Preview */}
+            <div className="relative">
+              <div className="relative overflow-hidden">
+              <GlossCardPaymentComponent
+                walletName={paymentData?.walletName || ''}
+                paymentQR={paymentData?.paymentQR || ''}
+                payLink={paymentData?.payLink || ''}
+                business={paymentData?.business || {
+                  name: '',
+                  company: '',
+                  description: '',
+                  phone: '',
+                  email: '',
+                  website: '',
+                  address: '',
+                }}
+                isLoading={isPaymentLoading}
+                error={error}
+              />
                 <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
               </div>
             </div>
@@ -272,7 +353,7 @@ export default function DigitalCardsLanding() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-gray-200 bg-gray-50">
+      <footer className="py-12 px-6 border-gray-200 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
