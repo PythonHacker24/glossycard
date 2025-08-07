@@ -31,15 +31,23 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 p-20">
-        <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm overflow-hidden">
-          <div className="flex items-center justify-center h-96">
-            <div className="text-center">
-              <svg className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-              </svg>
-              <p className="text-gray-500">Loading payment details...</p>
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
+        <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
+          <div className="px-8 py-6 bg-white border-b-1">
+            <div className="flex items-center justify-center space-x-2">
+              <h1 className="text-4xl text-black mt-3">Loading Payment Card...</h1>
+            </div>
+            <p className="text-center text-sm text-gray-600 mt-2">Please wait while we load your payment details</p>
+          </div>
+          <div className="bg-white p-8">
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <svg className="w-12 h-12 animate-spin mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                <p className="text-gray-500 text-lg">Loading payment details...</p>
+              </div>
             </div>
           </div>
         </div>
