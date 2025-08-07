@@ -32,6 +32,21 @@ export interface ProfileData {
   };
 }
 
+export interface PaymentData {
+  walletName: string;
+  paymentQR: string;
+  payLink: string;
+  business: {
+    name: string;
+    company: string;
+    description: string;
+    phone: string;
+    email: string;
+    website: string;
+    address: string;
+  };
+}
+
 // Upload image to public directory via API
 export const uploadImage = async (file: File): Promise<string> => {
   try {
@@ -148,6 +163,28 @@ export const getProfileData = async (id: string): Promise<ProfileData | null> =>
       }
     }
     
+    throw error;
+  }
+}; 
+
+// Fetch payment data from Firestore by ID
+export const getPaymentData = async (id: string): Promise<PaymentData | null> => {
+  try {
+    if (!db) {
+      throw new Error('Firebase database is not initialized. Check your environment variables.');
+    }
+    if (!navigator.onLine) {
+      throw new Error('No internet connection. Please check your network and try again.');
+    }
+    const docRef = doc(db, 'payments', id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data() as PaymentData;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching payment data:', error);
     throw error;
   }
 }; 
