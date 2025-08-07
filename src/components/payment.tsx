@@ -67,7 +67,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 flex items-center justify-center p-20">
+    <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
       <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
         {/* Header */}
         <div className="px-8 py-6 bg-white border-b-1">
