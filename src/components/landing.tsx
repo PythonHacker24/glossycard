@@ -168,7 +168,7 @@ export default function DigitalCardsLanding() {
                   action: 'header_payments_card_clicked',
                   location: 'header'
                 });
-                router.push('/payments/Ha2hSiG2gtpFNfzddBsc');
+                router.push('/payments/adityapatil');
               }}
             >
               Payments
