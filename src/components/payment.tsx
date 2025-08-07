@@ -72,7 +72,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
         {/* Header */}
         <div className="px-8 py-6 bg-white border-b-1">
           <div className="flex items-center justify-center space-x-2">
-            <h1 className="text-4xl text-black mt-3">{business.company}&apos;s Payments Card</h1>
+            <h1 className="text-4xl text-black mt-3">{business.company}&apos;s Payment Card</h1>
           </div>
           <p className="text-center text-sm text-gray-600 mt-2">Digital Payments Card Managed by {business.name}</p>
         </div>
