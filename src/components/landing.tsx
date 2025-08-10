@@ -7,6 +7,7 @@ import GlossCardPaymentComponent from './payment';
 import { useRouter } from 'next/navigation';
 import { getPaymentData, getProfileData, PaymentData, ProfileData } from '@/lib/firebaseService';
 import { logPageView, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
+import Image from 'next/image';
 
 export default function DigitalCardsLanding() {
   const router = useRouter();
@@ -301,6 +302,32 @@ export default function DigitalCardsLanding() {
                 error={error}
               />
                 <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Payments */}
+      <section id="features" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
+            Detailed Metrics to Drive Growth
+          </h2>
+          <p className='text-center text-gray-600 mb-16'>Get detailed performance analysis of cards</p>
+          
+          <div className="grid gap-12 items-center">
+            {/* Interactive Card Preview */}
+            <div className="relative">
+              <div className="relative overflow-hidden">
+                <Image 
+                  src="/dashboard.png"
+                  alt="Dashboard preview"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div>
               </div>
             </div>
           </div>
