@@ -5,13 +5,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
 
-export function VersionSwitcher({
-  versions,
-  defaultVersion,
-}: {
-  versions: string[]
-  defaultVersion: string
-}) {
+export function VersionSwitcher() {
 
   return (
     <SidebarMenuButton

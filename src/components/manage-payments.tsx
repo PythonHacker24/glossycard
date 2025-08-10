@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Copy, Plus, ExternalLink, QrCode } from 'lucide-react';
 
 const DigitalPaymentCardsDashboard = () => {
-  const [cards, setCards] = useState([
+  const [cards] = useState([
     {
       id: 1,
       name: 'Jane Doe',
@@ -117,7 +117,7 @@ const DigitalPaymentCardsDashboard = () => {
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Digital Payments Cards Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Manage Digital Payments Cards</h1>
               <p className="text-gray-600 mt-1">
                 Create, share, and track your digital business cards. Copy links, generate QR codes, and view analytics.
               </p>

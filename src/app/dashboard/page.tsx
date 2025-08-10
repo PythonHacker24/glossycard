@@ -5,7 +5,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
-import { ArrowUpRight, Plus } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 import { useState } from "react"
 import DigitalBusinessCardsDashboard from "@/components/manage-cards"
 import DigitalPaymentCardsDashboard from "@/components/manage-payments"
@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/card"
 
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,

@@ -2,9 +2,12 @@
 
 import React, { useState } from 'react';
 import { Copy, Plus, ExternalLink, QrCode } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const DigitalBusinessCardsDashboard = () => {
-  const [cards, setCards] = useState([
+  const router = useRouter();
+
+  const [cards] = useState([
     {
       id: 1,
       name: 'Jane Doe',
@@ -23,8 +26,7 @@ const DigitalBusinessCardsDashboard = () => {
     }
   ]);
 
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showAnalytics, setShowAnalytics] = useState(false);
+
   const [copiedItem, setCopiedItem] = useState('');
   
   const copyToClipboard = async (text: string, item: string) => {
@@ -35,6 +37,10 @@ const DigitalBusinessCardsDashboard = () => {
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
+  };
+
+  const createCard = () => {
+    router.push('/create-card')
   };
 
   const openCard = (url: string) => {
@@ -48,14 +54,14 @@ const DigitalBusinessCardsDashboard = () => {
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Digital Business Cards Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Manage Digital Business Cards</h1>
               <p className="text-gray-600 mt-1">
-                Create, share, and track your digital business cards. Copy links, generate QR codes, and view analytics.
+                Create, share, and track your digital payments cards. Copy links, generate QR codes, and view analytics.
               </p>
             </div>
             <div className="flex items-center space-x-3">
               <button
-                onClick={() => setShowCreateModal(true)}
+                onClick={createCard}
                 className="flex items-center space-x-2 px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
               >
                 <Plus size={16} />

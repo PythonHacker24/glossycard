@@ -1,5 +1,5 @@
 import * as React from "react"
-import { BarChart, BarChart3, CreditCard, LayoutDashboard, QrCode, SquareDashedBottomIcon, Wallet } from "lucide-react"
+import { LayoutDashboard, QrCode, Wallet } from "lucide-react"
 
 import { VersionSwitcher } from "@/components/version-switcher"
 import {
@@ -7,7 +7,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -56,10 +55,7 @@ export function AppSidebar({ onViewChange, currentView = 'analytics', ...props }
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
+        <VersionSwitcher />
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (

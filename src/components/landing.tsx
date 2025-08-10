@@ -85,7 +85,7 @@ export default function DigitalCardsLanding() {
         action: 'create_card_clicked',
         location: 'landing_page'
       });
-      router.push("/create-card");
+      router.push("/signup");
     }
   }
 
@@ -98,7 +98,7 @@ export default function DigitalCardsLanding() {
       setIsProfileLoading(true);
       setError(null);
       
-      const id =  "Ha2hSiG2gtpFNfzddBsc";
+      const id =  "XmXCscpw3DIltAC4SHbn";
       if (!id) {
         setError('No profile ID provided');
         return;
@@ -169,10 +169,10 @@ export default function DigitalCardsLanding() {
                   action: 'header_payments_card_clicked',
                   location: 'header'
                 });
-                router.push('/payments/adityapatil');
+                router.push('/login');
               }}
             >
-              Payments
+              Login
             </button>
             <button 
               className="bg-black text-white px-10 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
@@ -184,7 +184,7 @@ export default function DigitalCardsLanding() {
                 getstarted();
               }}
             >
-              Create
+            Sign Up
             </button>
           </div>
         </nav>
