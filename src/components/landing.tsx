@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Clock, Globe, Handshake, User, ChartLine } from 'lucide-react';
+import { Users, FileText, Star, ArrowRight, Zap, Shield, Clock, Handshake, User, ChartLine } from 'lucide-react';
 import ProfileCard from './procard';
 import GlossCardPaymentComponent from './payment';
 import { useRouter } from 'next/navigation';
@@ -181,9 +181,9 @@ export default function DigitalCardsLanding() {
             Gloss Card
           </div>
           <div className="hidden md:flex space-x-8 text-sm">
-            <a href="#features" className="text-gray-600 hover:text-black transition-colors">Features</a>
-            <a href="#benefits" className="text-gray-600 hover:text-black transition-colors">Benefits</a>
-            <a href="#testimonials" className="text-gray-600 hover:text-black transition-colors">Reviews</a>
+            <a href="#features" className="text-gray-600 text-sm hover:text-black transition-colors">Features</a>
+            <a href="#benefits" className="text-gray-600 text-sm hover:text-black transition-colors">Benefits</a>
+            <a href="#testimonials" className="text-gray-600 text-sm hover:text-black transition-colors">Reviews</a>
           </div>
           <div className="flex items-center space-x-2">
             <button 
@@ -474,7 +474,7 @@ export default function DigitalCardsLanding() {
           <h2 className="text-4xl md:text-5xl mb-6 text-black">
             Ready to Transform Your Networking?
           </h2>
-          <p className="text-lg md:text-xl mb-8 text-gray-600 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-sm md:text-lg mb-8 text-gray-600 leading-relaxed max-w-2xl mx-auto">
             Join professionals who have already upgraded to digital business cards. 
             Start making lasting impressions in seconds, not minutes.
           </p>
@@ -497,7 +497,7 @@ export default function DigitalCardsLanding() {
             </button>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            No credit card required • Free forever • Setup in 2 minutes
+            No credit card required • Free forever
           </p>
         </div>
       </section>
@@ -511,7 +511,7 @@ export default function DigitalCardsLanding() {
                 Gloss Card
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Empowering careers through innovative digital networking solutions.
+                Revolutionizing professional connections through advanced digital networking solutions.
               </p>
             </div>
             <div>
