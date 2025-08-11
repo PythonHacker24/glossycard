@@ -14,6 +14,8 @@ export default function DigitalCardsLanding() {
 
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
@@ -22,6 +24,26 @@ export default function DigitalCardsLanding() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  // Handle scroll-based header visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past initial 100px
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setIsHeaderVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   // Log page view
   useEffect(() => {
@@ -151,8 +173,10 @@ export default function DigitalCardsLanding() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Header */}
-      <header className="border-b border-gray-300">
-        <nav className="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+      <header className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 backdrop-blur-sm border border-gray-200/50 shadow-xl rounded-2xl max-w-7xl w-[95%] mx-auto transition-transform duration-300 ${
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        <nav className="flex justify-between items-center px-6 py-4">
           <div className="text-3xl text-black">
             Gloss Card
           </div>
@@ -191,7 +215,7 @@ export default function DigitalCardsLanding() {
       </header>
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-6 bg-white">
+      <section className="text-center py-20 px-6 bg-white pt-28">
         <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-5xl md:text-6xl mb-4 text-black leading-tight">
             First impressions aren&apos;t given,
