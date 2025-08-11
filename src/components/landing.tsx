@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Clock, Globe } from 'lucide-react';
+import { Users, Briefcase, FileText, Share2, Star, ArrowRight, Zap, Shield, Clock, Globe, Handshake, User, ChartLine } from 'lucide-react';
 import ProfileCard from './procard';
 import GlossCardPaymentComponent from './payment';
 import { useRouter } from 'next/navigation';
@@ -30,24 +30,24 @@ export default function DigitalCardsLanding() {
 
   const features = [
     {
-      icon: <Briefcase className="w-6 h-6" />,
-      title: "Cold Emails & Marketing",
-      description: "Add QR code and link to your Gloss Card to reduce the friction of manually responding and improve changes of getting more responses"
+      icon: <Handshake className="w-6 h-6" />,
+      title: "Always Make a Memorable First Impression",
+      description: "Share a sleek, interactive card that tells your full story, instantly and professionally."
     },
     {
-      icon: <Globe className="w-6 h-6" />,
-      title: "Job Seekers & Freelancers", 
-      description: "Network globally and apply to companies worldwide with instantly shareable professional profiles"
+      icon: <User className="w-6 h-6" />,
+      title: "Never Lose a Lead Again", 
+      description: "Keep all connections organized with context, notes, and follow-up reminders."
     },
     {
       icon: <FileText className="w-6 h-6" />,
-      title: "No More Forms",
-      description: "Skip repetitive forms. One card contains everything the other party need"
+      title: "Update Once, Share Forever",
+      description: "Your details stay current across every card you've shared. No reprints, no outdated info."
     },
     {
-      icon: <Share2 className="w-6 h-6" />,
-      title: "Instant Sharing",
-      description: "Get recommended faster by sharing your complete professional story in seconds"
+      icon: <ChartLine className="w-6 h-6" />,
+      title: "Track Your Networking Impact",
+      description: "See who viewed your card, when, and where so you can follow up at the perfect moment."
     }
   ];
 
@@ -191,15 +191,15 @@ export default function DigitalCardsLanding() {
       </header>
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-6 bg-stone-50">
+      <section className="text-center py-20 px-6 bg-white">
         <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-5xl md:text-6xl mb-4 text-black leading-tight">
-            Smart Networking
+            First impressions aren&apos;t given,
             <br />
-            With Digital Cards
+            they&apos;re taken
           </h1>
           <p className="text-xs md:text-xl mb-6 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Get more leads with just one card and boost your reach
+          The future of connections fits in your pocket with <span className='text-xs md:text-xl mb-6 text-black max-w-3xl mx-auto leading-relaxed'>digital business cards</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button 
@@ -220,7 +220,73 @@ export default function DigitalCardsLanding() {
             </button>
           </div>
           <div className="mt-10 text-sm text-gray-500">
-            Trusted by students and professionals
+            Trusted by the best professionals in the city
+          </div>
+        </div>
+      </section>
+
+      {/* Problems with Paper Cards Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-4xl md:text-5xl text-black leading-tight">
+                The Problem with
+                <br />
+                Paper Business Cards
+              </h2>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Traditional business cards are becoming obsolete in our digital world. Here&apos;s what market research reveals:
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4">
+                  <div className="w-2 h-2 bg-black rounded-full mt-3 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-gray-800 font-medium">Estimates range from 88% to 92% of business cards ending up in the trash within a week.</p>
+                    <p className="text-gray-500 text-sm mt-1">Out of 10 billion cards printed annually, 8 billion are thrown out within the first week.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-2 h-2 bg-black rounded-full mt-3 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-gray-800 font-medium">90% of clients in professional services industries prefer digital interaction when asking questions about their account and business transactions.</p>
+                    <p className="text-gray-500 text-sm mt-1">63% of millennials prefer digital over traditional business cards for their ease of use and eco-friendliness.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-2 h-2 bg-black rounded-full mt-3 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-gray-800 font-medium">On average, companies spend $64.23 per employee on business cards each year.</p>
+                    <p className="text-gray-500 text-sm mt-1">Another estimate suggests that the average company spends between $100 and $2,300 per person annually on traditional business cards.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-2 h-2 bg-black rounded-full mt-3 flex-shrink-0"></div>
+                  <div>
+                    <p className="text-gray-800 font-medium">The inability to update contact information in real-time with traditional business cards can lead to missed connections.</p>
+                    <p className="text-gray-500 text-sm mt-1">An outdated business card says more about your past than your potential go digital and let your first impression be future proof.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="bg-gray-100 rounded-xl p-8 h-96 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <div className="w-16 h-16 bg-gray-300 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                    <Image 
+                      src="/scattered-cards.png"
+                      alt='scattered cards'
+                      layout='fill'
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -273,8 +339,33 @@ export default function DigitalCardsLanding() {
         </div>
       </section>
 
+      <section id="features" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
+            Detailed Metrics to Drive Growth
+          </h2>
+          <p className='text-center text-gray-600 mb-16'>Get detailed performance analysis of cards</p>
+          
+          <div className="grid gap-12 items-center">
+            {/* Interactive Card Preview */}
+            <div className="relative">
+              <div className="relative overflow-hidden">
+                <Image 
+                  src="/dashboard.png"
+                  alt="Dashboard preview"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Payments */}
-      <section id="features" className="py-20 px-6 bg-stone-50">
+      <section id="features" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
             Business Payments Made Simple
@@ -308,34 +399,8 @@ export default function DigitalCardsLanding() {
         </div>
       </section>
 
-      {/* Payments */}
-      <section id="features" className="py-20 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
-            Detailed Metrics to Drive Growth
-          </h2>
-          <p className='text-center text-gray-600 mb-16'>Get detailed performance analysis of cards</p>
-          
-          <div className="grid gap-12 items-center">
-            {/* Interactive Card Preview */}
-            <div className="relative">
-              <div className="relative overflow-hidden">
-                <Image 
-                  src="/dashboard.png"
-                  alt="Dashboard preview"
-                  width={800}
-                  height={600}
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Benefits Grid */}
-      <section id="benefits" className="py-20 px-6">
+      <section id="benefits" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl text-center mb-16 text-black">
             Supercharge Your Networking
@@ -355,7 +420,7 @@ export default function DigitalCardsLanding() {
       </section>
 
       {/* Success Stories */}
-      <section id="testimonials" className="py-20 px-6 bg-gray-50">
+      <section id="testimonials" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl md:text-5xl text-center mb-16 text-black">
             Success Stories
