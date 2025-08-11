@@ -173,11 +173,11 @@ export default function DigitalCardsLanding() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* Header */}
-      <header className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 backdrop-blur-sm border border-gray-200/50 shadow-xl rounded-2xl max-w-7xl w-[95%] mx-auto transition-transform duration-300 ${
+      <header className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 backdrop-blur-sm border border-gray-200/50 shadow-lg rounded-2xl max-w-7xl w-[95%] mx-auto transition-transform duration-300 ${
         isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
       }`}>
         <nav className="flex justify-between items-center px-6 py-4">
-          <div className="text-3xl text-black">
+          <div className="text-2xl text-black">
             Gloss Card
           </div>
           <div className="hidden md:flex space-x-8 text-sm">
@@ -215,7 +215,7 @@ export default function DigitalCardsLanding() {
       </header>
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-6 bg-white pt-28">
+      <section className="text-center py-20 px-6 bg-white pt-50">
         <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-5xl md:text-6xl mb-4 text-black leading-tight">
             First impressions aren&apos;t given,
@@ -465,6 +465,40 @@ export default function DigitalCardsLanding() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl mb-6 text-black">
+            Ready to Transform Your Networking?
+          </h2>
+          <p className="text-lg md:text-xl mb-8 text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            Join professionals who have already upgraded to digital business cards. 
+            Start making lasting impressions in seconds, not minutes.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <button 
+              className="bg-black text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center group" 
+              onClick={() => {
+                logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
+                  action: 'hero_create_clicked',
+                  location: 'hero_section'
+                });
+                getstarted();
+              }}
+            >
+              Create Your Card Free
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button className="border border-gray-300 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              Watch Demo
+            </button>
+          </div>
+          <p className="text-sm text-gray-500 mt-6">
+            No credit card required • Free forever • Setup in 2 minutes
+          </p>
         </div>
       </section>
 
