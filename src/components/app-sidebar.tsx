@@ -1,5 +1,5 @@
 import * as React from "react"
-import { LayoutDashboard, QrCode, Wallet } from "lucide-react"
+import { LayoutDashboard, QrCode, User, Wallet } from "lucide-react"
 
 import { VersionSwitcher } from "@/components/version-switcher"
 import {
@@ -16,7 +16,6 @@ import {
 
 // This is sample data.
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
       title: "Dashboard",
@@ -41,14 +40,20 @@ const data = {
           icon: Wallet,
           view: 'payments' as const,
         },
+        {
+          title: "Contacts",
+          url: "#",
+          icon: User,
+          view: 'contacts' as const,
+        },
       ],
     },
   ],
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  onViewChange?: (view: 'analytics' | 'manage' | 'payments') => void;
-  currentView?: 'analytics' | 'manage' | 'payments';
+  onViewChange?: (view: 'analytics' | 'manage' | 'payments' | 'contacts' ) => void;
+  currentView?: 'analytics' | 'manage' | 'payments' | 'contacts';
 }
 
 export function AppSidebar({ onViewChange, currentView = 'analytics', ...props }: AppSidebarProps) {
