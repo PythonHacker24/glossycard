@@ -50,7 +50,7 @@ const topCitiesData = [
 ]
 
 export default function DashboardPage() {
-  const [currentView, setCurrentView] = useState<'analytics' | 'manage' | 'payments'>('analytics')
+  const [currentView, setCurrentView] = useState<'analytics' | 'manage' | 'payments' | 'contacts'>('analytics')
 
   const AnalyticsOverview = () => (
     <>
@@ -196,6 +196,22 @@ export default function DashboardPage() {
             <DigitalBusinessCardsDashboard />
           ) : currentView === 'payments' ? (
             <DigitalPaymentCardsDashboard />
+          ) : currentView === 'contacts' ? (
+            <div className="flex flex-1 flex-col gap-4">
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Contacts</h1>
+                    <p className="text-gray-600 mt-1">
+                      Manage your business contacts and connections.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center h-64">
+                <p className="text-gray-500">Contacts feature coming soon</p>
+              </div>
+            </div>
           ) : (
             <div className="flex items-center justify-center h-64">
               <p className="text-gray-500">Page not found</p>
