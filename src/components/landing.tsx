@@ -9,6 +9,9 @@ import { getPaymentData, getProfileData, PaymentData, ProfileData } from '@/lib/
 import { logPageView, logAnalyticsEvent, AnalyticsEvent } from '@/lib/analytics';
 import Image from 'next/image';
 
+import { DataTable } from "@/components/ui/data-table"
+import { columns, Payment } from "@/components/ui/columns"
+
 export default function DigitalCardsLanding() {
   const router = useRouter();
 
@@ -101,6 +104,23 @@ export default function DigitalCardsLanding() {
     }
   ];
 
+  const data: Payment[] = [
+    { name: "Aditya Patil", email: "aditya.patil@example.com", place: "California", cardlink: "test1" },
+    { name: "Priya Sharma", email: "priya.sharma@example.com", place: "New York", cardlink: "test2" },
+    { name: "Rahul Mehta", email: "rahul.mehta@example.com", place: "Texas", cardlink: "test3" },
+    { name: "Sofia Rodriguez", email: "sofia.rodriguez@example.com", place: "Florida", cardlink: "test4" },
+    { name: "Liam Anderson", email: "liam.anderson@example.com", place: "Washington", cardlink: "test5" },
+    { name: "Emma Thompson", email: "emma.thompson@example.com", place: "Oregon", cardlink: "test6" },
+    { name: "Noah Williams", email: "noah.williams@example.com", place: "Nevada", cardlink: "test7" },
+    { name: "Olivia Martinez", email: "olivia.martinez@example.com", place: "Arizona", cardlink: "test8" },
+    { name: "Harper Young", email: "harper.young@example.com", place: "Indiana", cardlink: "test16" },
+    { name: "Lucas King", email: "lucas.king@example.com", place: "Minnesota", cardlink: "test17" },
+    { name: "Mia Scott", email: "mia.scott@example.com", place: "Missouri", cardlink: "test18" },
+    { name: "Elijah Hill", email: "elijah.hill@example.com", place: "Wisconsin", cardlink: "test19" },
+    { name: "Amelia Green", email: "amelia.green@example.com", place: "Tennessee", cardlink: "test20" },
+    { name: "Alexander Adams", email: "alexander.adams@example.com", place: "Kentucky", cardlink: "test21" },
+  ]
+
   function getstarted() {
     if (router) {
       logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
@@ -187,7 +207,7 @@ export default function DigitalCardsLanding() {
           </div>
           <div className="flex items-center space-x-2">
             <button 
-              className="bg-transparent text-gray-900 px-6 py-2 rounded-lg border-1 hover:bg-gray-200 transition-colors text-lg font-medium" 
+              className="bg-transparent text-gray-900 px-5 py-1 rounded-lg border-1 hover:bg-gray-200 transition-colors text-lg font-medium" 
               onClick={() => {
                 logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
                   action: 'header_payments_card_clicked',
@@ -199,7 +219,7 @@ export default function DigitalCardsLanding() {
               Login
             </button>
             <button 
-              className="bg-black text-white px-10 py-2 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
+              className="bg-black text-white px-5 py-1 rounded-lg hover:bg-gray-800 transition-colors text-lg font-medium" 
               onClick={() => {
                 logAnalyticsEvent(AnalyticsEvent.BUTTON_CLICK, {
                   action: 'header_create_clicked',
@@ -379,7 +399,7 @@ export default function DigitalCardsLanding() {
                   alt="Dashboard preview"
                   width={800}
                   height={600}
-                  className="w-full h-auto rounded-lg shadow-lg"
+                  className="w-full h-auto border border-gray-200 rounded-lg shadow-lg"
                 />
                 {/* <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div> */}
               </div>
@@ -417,6 +437,23 @@ export default function DigitalCardsLanding() {
                 error={error}
               />
                 {/* <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl text-center mb-3 text-black">
+           Manage Your Contacts Seemlessly
+          </h2>
+          <p className='text-center text-gray-600 mb-16'>Manage all your contacts from your network and never forget who you meet</p>
+          
+          <div className="grid gap-12 items-center">
+            <div className="relative">
+              <div className="container mx-auto py-10">
+                <DataTable columns={columns} data={data} />
               </div>
             </div>
           </div>
