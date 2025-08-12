@@ -350,13 +350,13 @@ export default function DigitalCardsLanding() {
 
             {/* Interactive Card Preview */}
             <div className="relative">
-              <div className="relative overflow-hidden">
+              <div className="relative ">
                 <ProfileCard 
                   profileData={profileData}
                   isLoading={isProfileLoading}
                   error={error}
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+                {/* <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div> */}
               </div>
             </div>
           </div>
@@ -373,7 +373,7 @@ export default function DigitalCardsLanding() {
           <div className="grid gap-12 items-center">
             {/* Interactive Card Preview */}
             <div className="relative">
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden shadow-lg">
                 <Image 
                   src="/dashboard.png"
                   alt="Dashboard preview"
@@ -381,7 +381,7 @@ export default function DigitalCardsLanding() {
                   height={600}
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div>
+                {/* <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div> */}
               </div>
             </div>
           </div>
@@ -416,7 +416,7 @@ export default function DigitalCardsLanding() {
                 isLoading={isPaymentLoading}
                 error={error}
               />
-                <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+                {/* <div className="absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div> */}
               </div>
             </div>
           </div>

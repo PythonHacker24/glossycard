@@ -88,7 +88,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
+      <div className="min-h-screen flex items-center justify-center p-10">
         <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
           <div className="px-8 py-6 bg-white border-b-1">
             <div className="flex items-center justify-center space-x-2">
@@ -114,7 +114,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
+      <div className="min-h-screen flex items-center justify-center p-10">
         <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
           <div className="px-8 py-6 bg-white border-b-1">
             <div className="flex items-center justify-center space-x-2">
@@ -140,7 +140,7 @@ const GlossCardPaymentComponent: React.FC<GlossCardPaymentComponentProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 flex items-center justify-center p-10">
+    <div className="min-h-screen bg-white flex items-center justify-center p-10">
       <div className="rounded-2xl shadow-sm max-w-4xl w-full overflow-hidden border-1">
         {/* Header */}
         <div className="px-8 py-6 bg-white border-b-1">
